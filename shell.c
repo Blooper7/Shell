@@ -53,7 +53,6 @@ int shell_help(char **args)
 {
     int i;
     printf("Blooper7's Shell\n");
-    printf("Type program names and relevant args, press enter.\n");
     printf("The following functions are built in:\n");
 
     for (i=0; i<shell_num_builtins(); i++) {
