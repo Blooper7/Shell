@@ -1,5 +1,3 @@
-# DO NOT RUN. POTENTIAL MEMORY LEAK
-
 # Basic Shell
 An extremely basic shell written in C
 
