@@ -71,39 +71,19 @@ int shell_exit(char **args)
 
 char *shell_read_line(void)
 {
-    int bufsize=SH_RL_BUFSIZE;
-    int position=0;
-    char *buffer=malloc(sizeof(char)*bufsize); //allocate memory starting at the buffer address (cuz pointer)
-    int c;
+    char *line=NULL;
+    ssize_t bufsize=0; // Make getline allocate the buffer instead.
 
-    if (!buffer) {
-        fprintf(stderr, "shell: allocation error\n");
-        exit(EXIT_FAILURE);
-    }
-
-    while (1) {
-        //Read a char
-        c=getchar();
-
-        //if there's an EOF, replace with a null char and return
-        if (c==EOF||c=='\n') {
-            buffer[position]='\0';
-            return buffer;
+    if (getline(&line, &bufsize, stdin) == -1) {
+        if (feof(stdin)) {
+            exit(EXIT_SUCCESS); //Got an EOF
         } else {
-            buffer[position]=c;
-        }
-        position++;
-
-        //if the buffer has been exceeded, reallocate (we love C :D)
-        if (position>=bufsize) {
-            bufsize+=SH_RL_BUFSIZE;
-            buffer=realloc(buffer, bufsize);
-            if (!buffer) {
-                fprintf(stderr, "shell: allocation error\n");
-                exit(EXIT_FAILURE);
-            }
+            perror("readline");
+            exit(EXIT_FAILURE);
         }
     }
+
+    return line;
 }
 
 char **shell_split_line(char *line)
