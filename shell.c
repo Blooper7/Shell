@@ -3,6 +3,8 @@
 #include <sys/wait.h>
 #include <string.h>
 #include <unistd.h>
+#include  <linux/limits.h>
+#include <dirent.h>
 
 #define SH_RL_BUFSIZE 1024
 #define SH_TOK_BUFSIZE 64
@@ -12,6 +14,9 @@
     Declarations for shell builtins:
 */
 int shell_cd(char **args);
+int shell_dir();
+int shell_ls(char **args);
+int shell_echo(char **args);
 int shell_help(char **args);
 int shell_exit(char **args);
 
@@ -20,12 +25,18 @@ int shell_exit(char **args);
 */
 char *builtin_str[] = {
     "cd",
+    "dir",
+    "ls",
+    "echo",
     "help",
     "exit"
 };
 
 int (*builtin_func[]) (char **) = {
     &shell_cd,
+    &shell_dir,
+    &shell_ls,
+    &shell_echo,
     &shell_help,
     &shell_exit
 };
@@ -47,6 +58,40 @@ int shell_cd(char **args)
         }
     }
     return 1;
+}
+
+int shell_dir()
+{
+    char cwd[PATH_MAX];
+    if (getcwd(cwd,sizeof(cwd)) != NULL) {
+        printf("%s\n", cwd);
+    } else {
+        perror("getcwd error\n");
+    }
+}
+
+int shell_ls(char **args) {
+    DIR *d;
+    struct dirent *dir;
+    if (args[1]==NULL) {
+        d=opendir(".");
+    } else {
+        d=opendir(args[1]);
+    }
+    if (d) {
+        printf("-> | ");
+        while ((dir=readdir(d)) != NULL) {
+            printf("%s | ", dir->d_name);
+        }
+        printf("\n");
+        closedir(d);
+    }
+    return 1;
+}
+
+int shell_echo(char **args)
+{
+    printf("Sorry, I'm not implemented yet!\n");
 }
 
 int shell_help(char **args)
