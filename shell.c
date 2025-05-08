@@ -62,8 +62,8 @@ int shell_cd(char **args)
 
 int shell_dir()
 {
-    char cwd[PATH_MAX];
-    if (getcwd(cwd,sizeof(cwd)) != NULL) {
+    char cwd[PATH_MAX]; //create an array with size of PATH_MAX
+    if (getcwd(cwd,sizeof(cwd)) != NULL) { //Populate cwd array and ensure its existence
         printf("%s\n", cwd);
     } else {
         perror("getcwd error\n");
