@@ -46,7 +46,7 @@ int shell_num_builtins() {
 }
 
 /*
-    Builting func implementations
+    Builtin func implementations
 */
 int shell_cd(char **args)
 {
