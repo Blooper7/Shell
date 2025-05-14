@@ -68,6 +68,8 @@ int shell_dir()
     } else {
         perror("getcwd error\n");
     }
+    
+    return 1;
 }
 
 int shell_ls(char **args) {
